@@ -306,6 +306,46 @@
         const docImage = document.getElementById('document-image');
         const pageCounter = document.getElementById('page-counter');
 
+        // Image preloading system
+        const imageCache = new Map();
+        const imageLoadPromises = [];
+
+        function preloadImage(path) {
+            return new Promise((resolve) => {
+                if (imageCache.has(path)) {
+                    resolve();
+                    return;
+                }
+                const img = new Image();
+                img.onload = () => {
+                    imageCache.set(path, img);
+                    resolve();
+                };
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${path}`);
+                    resolve(); // Resolve anyway to prevent blocking
+                };
+                img.src = path;
+            });
+        }
+
+        // Preload all images immediately
+        function preloadAllImages() {
+            const uniquePaths = new Set();
+            
+            // Get all unique image paths
+            Object.values(documentPaths).forEach(lesson => {
+                Object.values(lesson).forEach(path => {
+                    uniquePaths.add(path);
+                });
+            });
+
+            // Start preloading all images
+            uniquePaths.forEach(path => {
+                imageLoadPromises.push(preloadImage(path));
+            });
+        }
+
         // Categories data
         const categories = {
             computer: {
@@ -346,7 +386,7 @@
             }
         };
 
-        // Document data
+        // Document paths
         const documentPaths = {
             "Programming Basics": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
             "Web Development": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
@@ -417,20 +457,15 @@
         }
 
         function goBack(target) {
-            const pages = {
-                categories: () => {
-                    categoriesPage.style.display = 'block';
-                    lessonsPage.style.display = 'none';
-                    documentsPage.style.display = 'none';
-                },
-                lessons: () => {
-                    categoriesPage.style.display = 'none';
-                    lessonsPage.style.display = 'block';
-                    documentsPage.style.display = 'none';
-                }
-            };
-            
-            if (pages[target]) pages[target]();
+            if (target === 'categories') {
+                categoriesPage.style.display = 'block';
+                lessonsPage.style.display = 'none';
+                documentsPage.style.display = 'none';
+            } else if (target === 'lessons') {
+                categoriesPage.style.display = 'none';
+                lessonsPage.style.display = 'block';
+                documentsPage.style.display = 'none';
+            }
         }
 
         function nextDocument() {
@@ -448,13 +483,24 @@
         }
 
         function updateDocumentView() {
-            const imagePath = documentPaths[state.currentLesson]?.[state.currentDocPage] || "Logo.png";
-            docImage.src = imagePath;
+            const path = documentPaths[state.currentLesson]?.[state.currentDocPage] || "Logo.png";
+            
+            // Use cached image if available
+            if (imageCache.has(path)) {
+                docImage.src = imageCache.get(path).src;
+            } else {
+                // Fallback to direct loading if not cached yet
+                docImage.src = path;
+            }
+            
             pageCounter.textContent = `Page ${state.currentDocPage} of ${state.totalDocPages}`;
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', updateDocumentView);
+        // Initialize - start preloading images immediately
+        document.addEventListener('DOMContentLoaded', () => {
+            preloadAllImages();
+            updateDocumentView();
+        });
     </script>
 </body>
 </html>
