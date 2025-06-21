@@ -337,50 +337,74 @@
             }
         };
 
-        // ALL DOCUMENTS USE THE SAME IMAGE PATH
+        // ALL DOCUMENTS USE Logo.png NOW
         const documentPaths = {
             /* Computer */
             "Programming Basics": {
-                1: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                2: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                3: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                4: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG"
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
             },
-			
-			"Web Development": {
-                1: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                2: "file:///E:/Bhavesh/Gaming Beast/Purple and Blue Neon  Gamer  Youtube Banner.png",
-                3: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                4: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG"
+            
+            "Web Development": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
             },
             /* Physical Education */
             "Sports Fundamentals": {
-                1: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                2: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                3: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG"
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png"
             },
-            /* Add paths for all other lessons following the same pattern */
-            "Hindi Grammar": {
-                1: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                2: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG"
+            /* All other lessons */
+            "Classical Mechanics": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png",
+                5: "Logo.png"
+            },
+            "Organic Chemistry": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            "Cell Biology": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            "Grammar": {
+                1: "Logo.png",
+                2: "Logo.png"
             },
             "Ancient History": {
-                1: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                2: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG",
-                3: "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG"
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png"
+            },
+            "Physical Geography": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
             }
         };
 
         // Document page counts
         const documents = {
             "Programming Basics": { pages: 4 },
-			"Web Development": { pages: 10 },
+            "Web Development": { pages: 4 },
             "Sports Fundamentals": { pages: 3 },
             "Classical Mechanics": { pages: 5 },
             "Organic Chemistry": { pages: 4 },
             "Cell Biology": { pages: 4 },
-            "Hindi Grammar": { pages: 2 },
-            "Marathi Grammar": { pages: 2 },
+            "Grammar": { pages: 2 },
             "Ancient History": { pages: 3 },
             "Physical Geography": { pages: 4 }
         };
@@ -455,9 +479,7 @@
 
         function updateDocumentView() {
             const docImage = document.getElementById('document-image');
-            // Use the specific path if available, otherwise use default
-            const imagePath = documentPaths[currentLesson]?.[currentDocPage] || 
-                             "file:///E:/Bhavesh/Aqua%20Avengers/Final%20-%20logo.PNG";
+            const imagePath = documentPaths[currentLesson]?.[currentDocPage] || "Logo.png";
             docImage.src = imagePath;
             document.getElementById('page-counter').textContent = `Page ${currentDocPage} of ${totalDocPages}`;
         }
