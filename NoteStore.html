@@ -136,6 +136,7 @@
             padding: 2rem;
             box-shadow: var(--shadow);
             margin-top: 2rem;
+            position: relative;
         }
 
         .document-image-container {
@@ -148,6 +149,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
         }
 
         .document-image {
@@ -156,6 +158,7 @@
             max-height: 80vh;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             border-radius: 0.5rem;
+            transition: opacity 0.3s ease;
         }
 
         .document-nav {
@@ -183,6 +186,78 @@
         .page-counter {
             font-weight: 600;
             color: var(--gray);
+        }
+
+        /* LOADING SCREEN */
+        .loading-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            border-radius: 0.5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-screen.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid var(--primary-light);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+        }
+
+        .loading-text {
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .loading-subtext {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+            text-align: center;
+            max-width: 80%;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* TYPING ANIMATION */
+        .typing-text {
+            overflow: hidden;
+            white-space: nowrap;
+            border-right: 2px solid var(--primary);
+            animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: var(--primary) }
         }
 
         /* RESPONSIVE STYLES */
@@ -291,6 +366,11 @@
             
             <div class="document-viewer">
                 <div class="document-image-container">
+                    <div class="loading-screen" id="loading-screen">
+                        <div class="loading-spinner"></div>
+                        <div class="loading-text typing-text">Preparing your notes</div>
+                        <div class="loading-subtext">Just a moment while we load the next page...</div>
+                    </div>
                     <img src="" alt="Document" class="document-image" id="document-image">
                 </div>
                 <div class="document-nav">
@@ -312,6 +392,7 @@
         const documentsPageTitle = document.getElementById('documents-page-title');
         const docImage = document.getElementById('document-image');
         const pageCounter = document.getElementById('page-counter');
+        const loadingScreen = document.getElementById('loading-screen');
 
         // Image preloading system
         const imageCache = new Map();
@@ -551,6 +632,7 @@
         function nextDocument() {
             if (state.currentDocPage < state.totalDocPages) {
                 state.currentDocPage++;
+                showLoadingScreen();
                 updateDocumentView();
             }
         }
@@ -558,8 +640,25 @@
         function prevDocument() {
             if (state.currentDocPage > 1) {
                 state.currentDocPage--;
+                showLoadingScreen();
                 updateDocumentView();
             }
+        }
+
+        function showLoadingScreen() {
+            loadingScreen.classList.add('active');
+            docImage.style.opacity = '0';
+            
+            // Reset typing animation
+            const typingText = loadingScreen.querySelector('.typing-text');
+            typingText.style.animation = 'none';
+            void typingText.offsetWidth; // Trigger reflow
+            typingText.style.animation = 'typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite';
+        }
+
+        function hideLoadingScreen() {
+            loadingScreen.classList.remove('active');
+            docImage.style.opacity = '1';
         }
 
         function updateDocumentView() {
@@ -568,9 +667,20 @@
             // Use cached image if available
             if (imageCache.has(path)) {
                 docImage.src = imageCache.get(path).src;
+                hideLoadingScreen();
             } else {
-                // Fallback to direct loading if not cached yet
-                docImage.src = path;
+                // If not cached, load the image
+                const img = new Image();
+                img.onload = () => {
+                    docImage.src = path;
+                    hideLoadingScreen();
+                    imageCache.set(path, img);
+                };
+                img.onerror = () => {
+                    console.warn(`Failed to load image: ${path}`);
+                    hideLoadingScreen();
+                };
+                img.src = path;
             }
             
             pageCounter.textContent = `Page ${state.currentDocPage} of ${state.totalDocPages}`;
