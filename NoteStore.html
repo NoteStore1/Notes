@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Note Store</title>
+    <style>
+        /* MAIN STYLES */
+        :root {
+            --primary: #6c5ce7;
+            --primary-light: #a29bfe;
+            --secondary: #fd79a8;
+            --light: #f8f9fa;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --shadow: 0 10px 30px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #dfe6e9 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* HEADER STYLES */
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .site-title {
+            font-size: 3.5rem;
+            font-weight: 800;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.2rem;
+            letter-spacing: -1px;
+        }
+
+        .author-credit {
+            font-size: 1rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        /* [Rest of the CSS remains exactly the same] */
+        /* NAVIGATION HEADER */
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        .back-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .back-button:hover {
+            background: var(--primary-light);
+            transform: translateX(-5px);
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* LIST STYLES */
+        .item-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .list-item {
+            background: white;
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            cursor: pointer;
+            border-left: 5px solid var(--primary);
+        }
+
+        .list-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+
+        /* DOCUMENT VIEWER */
+        .document-viewer {
+            background: white;
+            border-radius: 0.8rem;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            margin-top: 2rem;
+        }
+
+        .document-image-container {
+            max-width: 100%;
+            overflow: auto;
+            margin-bottom: 2rem;
+            border-radius: 0.5rem;
+            background: #f5f5f5;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .document-image {
+            max-width: 100%;
+            height: auto;
+            max-height: 80vh;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 0.5rem;
+        }
+
+        .document-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        .nav-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .nav-button:hover {
+            background: var(--primary-light);
+        }
+
+        .page-counter {
+            font-weight: 600;
+            color: var(--gray);
+        }
+
+        /* RESPONSIVE STYLES */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1.5rem;
+            }
+
+            .site-title {
+                font-size: 2.5rem;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .nav-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            .document-nav {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .item-list {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .item-list {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Categories Page -->
+    <div id="categories-page">
+        <div class="container">
+            <div class="header">
+                <h1 class="site-title">Note Store</h1>
+                <p class="author-credit">by Bhavesh Pawar</p>
+            </div>
+            
+            <div class="item-list">
+                <div class="list-item" onclick="navigateTo('computer')">
+                    <div class="item-title">Computer</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('physical_education')">
+                    <div class="item-title">Physical Education</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('physics')">
+                    <div class="item-title">Physics</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('chemistry')">
+                    <div class="item-title">Chemistry</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('biology')">
+                    <div class="item-title">Biology</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('hindi')">
+                    <div class="item-title">Hindi</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('marathi')">
+                    <div class="item-title">Marathi</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('history')">
+                    <div class="item-title">History</div>
+                </div>
+                <div class="list-item" onclick="navigateTo('geography')">
+                    <div class="item-title">Geography</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lessons Page -->
+    <div id="lessons-page" style="display: none;">
+        <div class="container">
+            <div class="nav-header">
+                <button class="back-button" onclick="goBack('categories')">
+                    ← Back to Categories
+                </button>
+                <h2 class="page-title" id="lessons-page-title">Lessons</h2>
+                <div></div>
+            </div>
+            
+            <div class="item-list" id="lessons-list"></div>
+        </div>
+    </div>
+
+    <!-- Documents Page -->
+    <div id="documents-page" style="display: none;">
+        <div class="container">
+            <div class="nav-header">
+                <button class="back-button" onclick="goBack('lessons')">
+                    ← Back to Lessons
+                </button>
+                <h2 class="page-title" id="documents-page-title">Document</h2>
+                <div></div>
+            </div>
+            
+            <div class="document-viewer">
+                <div class="document-image-container">
+                    <img src="" alt="Document" class="document-image" id="document-image">
+                </div>
+                <div class="document-nav">
+                    <button class="nav-button" onclick="prevDocument()">← Previous</button>
+                    <span class="page-counter" id="page-counter">Page 1 of 1</span>
+                    <button class="nav-button" onclick="nextDocument()">Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Categories data
+        const categories = {
+            computer: {
+                title: "Computer",
+                lessons: ["Programming Basics", "Web Development", "Database Systems", "Computer Networks"]
+            },
+            physical_education: {
+                title: "Physical Education",
+                lessons: ["Sports Fundamentals", "Fitness Training", "Yoga Practices", "Athletic Techniques"]
+            },
+            physics: {
+                title: "Physics",
+                lessons: ["Classical Mechanics", "Electromagnetism", "Thermodynamics", "Quantum Physics"]
+            },
+            chemistry: {
+                title: "Chemistry",
+                lessons: ["Organic Chemistry", "Inorganic Chemistry", "Physical Chemistry", "Analytical Chemistry"]
+            },
+            biology: {
+                title: "Biology",
+                lessons: ["Cell Biology", "Genetics", "Ecology", "Human Physiology"]
+            },
+            hindi: {
+                title: "Hindi",
+                lessons: ["Grammar", "Literature", "Composition", "Poetry"]
+            },
+            marathi: {
+                title: "Marathi",
+                lessons: ["Grammar", "Literature", "Composition", "Poetry"]
+            },
+            history: {
+                title: "History",
+                lessons: ["Ancient History", "Medieval History", "Modern History", "World History"]
+            },
+            geography: {
+                title: "Geography",
+                lessons: ["Physical Geography", "Human Geography", "Environmental Geography", "Geopolitics"]
+            }
+        };
+
+        // ALL DOCUMENTS USE Logo.png NOW
+        const documentPaths = {
+            /* Computer */
+            "Programming Basics": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            
+            "Web Development": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            /* Physical Education */
+            "Sports Fundamentals": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png"
+            },
+            /* All other lessons */
+            "Classical Mechanics": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png",
+                5: "Logo.png"
+            },
+            "Organic Chemistry": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            "Cell Biology": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            },
+            "Grammar": {
+                1: "Logo.png",
+                2: "Logo.png"
+            },
+            "Ancient History": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png"
+            },
+            "Physical Geography": {
+                1: "Logo.png",
+                2: "Logo.png",
+                3: "Logo.png",
+                4: "Logo.png"
+            }
+        };
+
+        // Document page counts
+        const documents = {
+            "Programming Basics": { pages: 4 },
+            "Web Development": { pages: 4 },
+            "Sports Fundamentals": { pages: 3 },
+            "Classical Mechanics": { pages: 5 },
+            "Organic Chemistry": { pages: 4 },
+            "Cell Biology": { pages: 4 },
+            "Grammar": { pages: 2 },
+            "Ancient History": { pages: 3 },
+            "Physical Geography": { pages: 4 }
+        };
+
+        let currentPage = 'categories';
+        let currentCategory = '';
+        let currentLesson = '';
+        let currentDocPage = 1;
+        let totalDocPages = 1;
+
+        function navigateTo(page) {
+            if (categories[page]) {
+                document.getElementById('categories-page').style.display = 'none';
+                document.getElementById('lessons-page').style.display = 'block';
+                document.getElementById('documents-page').style.display = 'none';
+                
+                const category = categories[page];
+                document.getElementById('lessons-page-title').textContent = category.title;
+                currentCategory = page;
+                
+                const lessonsList = document.getElementById('lessons-list');
+                lessonsList.innerHTML = '';
+                
+                category.lessons.forEach(lesson => {
+                    const lessonItem = document.createElement('div');
+                    lessonItem.className = 'list-item';
+                    lessonItem.onclick = () => openLesson(lesson);
+                    lessonItem.innerHTML = `<div class="item-title">${lesson}</div>`;
+                    lessonsList.appendChild(lessonItem);
+                });
+            }
+        }
+
+        function openLesson(lesson) {
+            document.getElementById('categories-page').style.display = 'none';
+            document.getElementById('lessons-page').style.display = 'none';
+            document.getElementById('documents-page').style.display = 'block';
+            
+            document.getElementById('documents-page-title').textContent = lesson;
+            currentLesson = lesson;
+            currentDocPage = 1;
+            totalDocPages = documents[lesson]?.pages || 1;
+            
+            updateDocumentView();
+        }
+
+        function goBack(target) {
+            if (target === 'categories') {
+                document.getElementById('categories-page').style.display = 'block';
+                document.getElementById('lessons-page').style.display = 'none';
+                document.getElementById('documents-page').style.display = 'none';
+            } else if (target === 'lessons') {
+                document.getElementById('categories-page').style.display = 'none';
+                document.getElementById('lessons-page').style.display = 'block';
+                document.getElementById('documents-page').style.display = 'none';
+            }
+        }
+
+        function nextDocument() {
+            if (currentDocPage < totalDocPages) {
+                currentDocPage++;
+                updateDocumentView();
+            }
+        }
+
+        function prevDocument() {
+            if (currentDocPage > 1) {
+                currentDocPage--;
+                updateDocumentView();
+            }
+        }
+
+        function updateDocumentView() {
+            const docImage = document.getElementById('document-image');
+            const imagePath = documentPaths[currentLesson]?.[currentDocPage] || "Logo.png";
+            docImage.src = imagePath;
+            document.getElementById('page-counter').textContent = `Page ${currentDocPage} of ${totalDocPages}`;
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDocumentView();
+        });
+    </script>
+</body>
+</html>
