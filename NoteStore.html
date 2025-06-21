@@ -60,7 +60,6 @@
             font-style: italic;
         }
 
-        /* [Rest of the CSS remains exactly the same] */
         /* NAVIGATION HEADER */
         .nav-header {
             display: flex;
@@ -297,6 +296,16 @@
     </div>
 
     <script>
+        // Cache DOM elements
+        const categoriesPage = document.getElementById('categories-page');
+        const lessonsPage = document.getElementById('lessons-page');
+        const documentsPage = document.getElementById('documents-page');
+        const lessonsPageTitle = document.getElementById('lessons-page-title');
+        const lessonsList = document.getElementById('lessons-list');
+        const documentsPageTitle = document.getElementById('documents-page-title');
+        const docImage = document.getElementById('document-image');
+        const pageCounter = document.getElementById('page-counter');
+
         // Categories data
         const categories = {
             computer: {
@@ -337,62 +346,20 @@
             }
         };
 
-        // ALL DOCUMENTS USE Logo.png NOW
+        // Document data
         const documentPaths = {
-            /* Computer */
-            "Programming Basics": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png",
-                4: "Logo.png"
-            },
-            
-            "Web Development": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png",
-                4: "Logo.png"
-            },
-            /* Physical Education */
-            "Sports Fundamentals": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png"
-            },
-            /* All other lessons */
-            "Classical Mechanics": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png",
-                4: "Logo.png",
-                5: "Logo.png"
-            },
-            "Organic Chemistry": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png",
-                4: "Logo.png"
-            },
-            "Cell Biology": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png",
-                4: "Logo.png"
-            },
-            "Grammar": {
-                1: "Logo.png",
-                2: "Logo.png"
-            },
-            "Ancient History": {
-                1: "Logo.png",
-                2: "Logo.png",
-                3: "Logo.png"
-            },
+            "Programming Basics": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Web Development": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Sports Fundamentals": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Classical Mechanics": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png",5:"Logo.png"},
+            "Organic Chemistry": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Cell Biology": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Grammar": {1:"Logo.png",2:"Logo.png"},
+            "Ancient History": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Signs And Symbols": {
                 1: "Geo_SignsAndSymbols1.jpg",
                 2: "Geo_SignsAndSymbols2.jpg",
-                3: "Geo_SignsAndSymbols3.jpg",
-               
+                3: "Geo_SignsAndSymbols3.jpg"
             }
         };
 
@@ -409,85 +376,85 @@
             "Signs And Symbols": { pages: 3 }
         };
 
-        let currentPage = 'categories';
-        let currentCategory = '';
-        let currentLesson = '';
-        let currentDocPage = 1;
-        let totalDocPages = 1;
+        // State variables
+        const state = {
+            currentCategory: '',
+            currentLesson: '',
+            currentDocPage: 1,
+            totalDocPages: 1
+        };
 
+        // Navigation functions
         function navigateTo(page) {
-            if (categories[page]) {
-                document.getElementById('categories-page').style.display = 'none';
-                document.getElementById('lessons-page').style.display = 'block';
-                document.getElementById('documents-page').style.display = 'none';
-                
-                const category = categories[page];
-                document.getElementById('lessons-page-title').textContent = category.title;
-                currentCategory = page;
-                
-                const lessonsList = document.getElementById('lessons-list');
-                lessonsList.innerHTML = '';
-                
-                category.lessons.forEach(lesson => {
-                    const lessonItem = document.createElement('div');
-                    lessonItem.className = 'list-item';
-                    lessonItem.onclick = () => openLesson(lesson);
-                    lessonItem.innerHTML = `<div class="item-title">${lesson}</div>`;
-                    lessonsList.appendChild(lessonItem);
-                });
-            }
+            if (!categories[page]) return;
+            
+            categoriesPage.style.display = 'none';
+            lessonsPage.style.display = 'block';
+            documentsPage.style.display = 'none';
+            
+            const category = categories[page];
+            lessonsPageTitle.textContent = category.title;
+            state.currentCategory = page;
+            
+            lessonsList.innerHTML = category.lessons.map(lesson => 
+                `<div class="list-item" onclick="openLesson('${lesson}')">
+                    <div class="item-title">${lesson}</div>
+                </div>`
+            ).join('');
         }
 
         function openLesson(lesson) {
-            document.getElementById('categories-page').style.display = 'none';
-            document.getElementById('lessons-page').style.display = 'none';
-            document.getElementById('documents-page').style.display = 'block';
+            categoriesPage.style.display = 'none';
+            lessonsPage.style.display = 'none';
+            documentsPage.style.display = 'block';
             
-            document.getElementById('documents-page-title').textContent = lesson;
-            currentLesson = lesson;
-            currentDocPage = 1;
-            totalDocPages = documents[lesson]?.pages || 1;
+            documentsPageTitle.textContent = lesson;
+            state.currentLesson = lesson;
+            state.currentDocPage = 1;
+            state.totalDocPages = documents[lesson]?.pages || 1;
             
             updateDocumentView();
         }
 
         function goBack(target) {
-            if (target === 'categories') {
-                document.getElementById('categories-page').style.display = 'block';
-                document.getElementById('lessons-page').style.display = 'none';
-                document.getElementById('documents-page').style.display = 'none';
-            } else if (target === 'lessons') {
-                document.getElementById('categories-page').style.display = 'none';
-                document.getElementById('lessons-page').style.display = 'block';
-                document.getElementById('documents-page').style.display = 'none';
-            }
+            const pages = {
+                categories: () => {
+                    categoriesPage.style.display = 'block';
+                    lessonsPage.style.display = 'none';
+                    documentsPage.style.display = 'none';
+                },
+                lessons: () => {
+                    categoriesPage.style.display = 'none';
+                    lessonsPage.style.display = 'block';
+                    documentsPage.style.display = 'none';
+                }
+            };
+            
+            if (pages[target]) pages[target]();
         }
 
         function nextDocument() {
-            if (currentDocPage < totalDocPages) {
-                currentDocPage++;
+            if (state.currentDocPage < state.totalDocPages) {
+                state.currentDocPage++;
                 updateDocumentView();
             }
         }
 
         function prevDocument() {
-            if (currentDocPage > 1) {
-                currentDocPage--;
+            if (state.currentDocPage > 1) {
+                state.currentDocPage--;
                 updateDocumentView();
             }
         }
 
         function updateDocumentView() {
-            const docImage = document.getElementById('document-image');
-            const imagePath = documentPaths[currentLesson]?.[currentDocPage] || "Logo.png";
+            const imagePath = documentPaths[state.currentLesson]?.[state.currentDocPage] || "Logo.png";
             docImage.src = imagePath;
-            document.getElementById('page-counter').textContent = `Page ${currentDocPage} of ${totalDocPages}`;
+            pageCounter.textContent = `Page ${state.currentDocPage} of ${state.totalDocPages}`;
         }
 
         // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateDocumentView();
-        });
+        document.addEventListener('DOMContentLoaded', updateDocumentView);
     </script>
 </body>
 </html>
