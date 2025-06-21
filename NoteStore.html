@@ -358,10 +358,10 @@
             computer: {
                 title: "Computer",
                 lessons: [
-                    {name: "Programming Basics", author: "Dr. Alan Turing"},
-                    {name: "Web Development", author: "Prof. Tim Berners-Lee"},
+                    {name: "No data", author: "Bhavesh Pawar"},
+                    /*{name: "Web Development", author: "Prof. Tim Berners-Lee"},
                     {name: "Database Systems", author: "Dr. Edgar Codd"},
-                    {name: "Computer Networks", author: "Prof. Vint Cerf"}
+                    {name: "Computer Networks", author: "Prof. Vint Cerf"}*/
                 ]
             },
             physical_education: {
@@ -430,7 +430,7 @@
             geography: {
                 title: "Geography",
                 lessons: [
-                    {name: "Signs And Symbols", author: "Prof. Alexander von Humboldt"}
+                    {name: "Signs And Symbols", author: ""}
                 ]
             }
         };
@@ -518,7 +518,7 @@
             lessonsList.innerHTML = category.lessons.map(lesson => 
                 `<div class="list-item" onclick="openLesson('${lesson.name}')">
                     <div class="item-title">${lesson.name}</div>
-                    <div class="item-author">by ${lesson.author}</div>
+                    <div class="item-author">Provided by ${lesson.author}</div>
                 </div>`
             ).join('');
         }
