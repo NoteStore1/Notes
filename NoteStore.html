@@ -122,6 +122,13 @@
             color: var(--dark);
         }
 
+        .item-author {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+
         /* DOCUMENT VIEWER */
         .document-viewer {
             background: white;
@@ -346,43 +353,85 @@
             });
         }
 
-        // Categories data
+        // Categories data with manually assigned authors
         const categories = {
             computer: {
                 title: "Computer",
-                lessons: ["Programming Basics", "Web Development", "Database Systems", "Computer Networks"]
+                lessons: [
+                    {name: "Programming Basics", author: "Dr. Alan Turing"},
+                    {name: "Web Development", author: "Prof. Tim Berners-Lee"},
+                    {name: "Database Systems", author: "Dr. Edgar Codd"},
+                    {name: "Computer Networks", author: "Prof. Vint Cerf"}
+                ]
             },
             physical_education: {
                 title: "Physical Education",
-                lessons: ["Sports Fundamentals", "Fitness Training", "Yoga Practices", "Athletic Techniques"]
+                lessons: [
+                    {name: "Sports Fundamentals", author: "Coach Michael Johnson"},
+                    {name: "Fitness Training", author: "Trainer Jillian Michaels"},
+                    {name: "Yoga Practices", author: "Guru B.K.S. Iyengar"},
+                    {name: "Athletic Techniques", author: "Coach Serena Williams"}
+                ]
             },
             physics: {
                 title: "Physics",
-                lessons: ["Classical Mechanics", "Electromagnetism", "Thermodynamics", "Quantum Physics"]
+                lessons: [
+                    {name: "Classical Mechanics", author: "Prof. Isaac Newton"},
+                    {name: "Electromagnetism", author: "Dr. James Clerk Maxwell"},
+                    {name: "Thermodynamics", author: "Prof. Ludwig Boltzmann"},
+                    {name: "Quantum Physics", author: "Dr. Niels Bohr"}
+                ]
             },
             chemistry: {
                 title: "Chemistry",
-                lessons: ["Organic Chemistry", "Inorganic Chemistry", "Physical Chemistry", "Analytical Chemistry"]
+                lessons: [
+                    {name: "Organic Chemistry", author: "Prof. Robert Burns Woodward"},
+                    {name: "Inorganic Chemistry", author: "Dr. Alfred Werner"},
+                    {name: "Physical Chemistry", author: "Prof. Linus Pauling"},
+                    {name: "Analytical Chemistry", author: "Dr. Fritz Pregl"}
+                ]
             },
             biology: {
                 title: "Biology",
-                lessons: ["Cell Biology", "Genetics", "Ecology", "Human Physiology"]
+                lessons: [
+                    {name: "Cell Biology", author: "Dr. Robert Hooke"},
+                    {name: "Genetics", author: "Prof. Gregor Mendel"},
+                    {name: "Ecology", author: "Dr. Rachel Carson"},
+                    {name: "Human Physiology", author: "Prof. Claude Bernard"}
+                ]
             },
             hindi: {
                 title: "Hindi",
-                lessons: ["Grammar", "Literature", "Composition", "Poetry"]
+                lessons: [
+                    {name: "Grammar", author: "Dr. Kamta Prasad Guru"},
+                    {name: "Literature", author: "Prof. Premchand"},
+                    {name: "Composition", author: "Dr. Hazari Prasad Dwivedi"},
+                    {name: "Poetry", author: "Prof. Mahadevi Verma"}
+                ]
             },
             marathi: {
                 title: "Marathi",
-                lessons: ["Grammar", "Literature", "Composition", "Poetry"]
+                lessons: [
+                    {name: "Grammar", author: "Prof. R.G. Jadhav"},
+                    {name: "Literature", author: "Dr. Pu La Deshpande"},
+                    {name: "Composition", author: "Prof. V.S. Khandekar"},
+                    {name: "Poetry", author: "Dr. Kusumagraj"}
+                ]
             },
             history: {
                 title: "History",
-                lessons: ["Ancient History", "Medieval History", "Modern History", "World History"]
+                lessons: [
+                    {name: "Ancient History", author: "Prof. Romila Thapar"},
+                    {name: "Medieval History", author: "Dr. Satish Chandra"},
+                    {name: "Modern History", author: "Prof. Bipan Chandra"},
+                    {name: "World History", author: "Dr. Yuval Noah Harari"}
+                ]
             },
             geography: {
                 title: "Geography",
-                lessons: ["Signs And Symbols"]
+                lessons: [
+                    {name: "Signs And Symbols", author: "Prof. Alexander von Humboldt"}
+                ]
             }
         };
 
@@ -392,10 +441,25 @@
             "Web Development": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
             "Sports Fundamentals": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Classical Mechanics": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png",5:"Logo.png"},
+            "Electromagnetism": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Thermodynamics": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Quantum Physics": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
             "Organic Chemistry": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Inorganic Chemistry": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Physical Chemistry": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Analytical Chemistry": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Cell Biology": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Genetics": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Ecology": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "Human Physiology": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Grammar": {1:"Logo.png",2:"Logo.png"},
+            "Literature": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Composition": {1:"Logo.png",2:"Logo.png"},
+            "Poetry": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Ancient History": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Medieval History": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
+            "Modern History": {1:"Logo.png",2:"Logo.png",3:"Logo.png",4:"Logo.png"},
+            "World History": {1:"Logo.png",2:"Logo.png",3:"Logo.png"},
             "Signs And Symbols": {
                 1: "Geo_SignsAndSymbols1.jpg",
                 2: "Geo_SignsAndSymbols2.jpg",
@@ -409,10 +473,25 @@
             "Web Development": { pages: 4 },
             "Sports Fundamentals": { pages: 3 },
             "Classical Mechanics": { pages: 5 },
+            "Electromagnetism": { pages: 4 },
+            "Thermodynamics": { pages: 3 },
+            "Quantum Physics": { pages: 4 },
             "Organic Chemistry": { pages: 4 },
+            "Inorganic Chemistry": { pages: 3 },
+            "Physical Chemistry": { pages: 4 },
+            "Analytical Chemistry": { pages: 3 },
             "Cell Biology": { pages: 4 },
+            "Genetics": { pages: 3 },
+            "Ecology": { pages: 4 },
+            "Human Physiology": { pages: 3 },
             "Grammar": { pages: 2 },
+            "Literature": { pages: 3 },
+            "Composition": { pages: 2 },
+            "Poetry": { pages: 3 },
             "Ancient History": { pages: 3 },
+            "Medieval History": { pages: 3 },
+            "Modern History": { pages: 4 },
+            "World History": { pages: 3 },
             "Signs And Symbols": { pages: 3 }
         };
 
@@ -437,8 +516,9 @@
             state.currentCategory = page;
             
             lessonsList.innerHTML = category.lessons.map(lesson => 
-                `<div class="list-item" onclick="openLesson('${lesson}')">
-                    <div class="item-title">${lesson}</div>
+                `<div class="list-item" onclick="openLesson('${lesson.name}')">
+                    <div class="item-title">${lesson.name}</div>
+                    <div class="item-author">by ${lesson.author}</div>
                 </div>`
             ).join('');
         }
